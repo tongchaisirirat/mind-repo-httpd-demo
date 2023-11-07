@@ -1,0 +1,20 @@
+steps:
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '.', '-t', 'asia-southeast1-docker.pkg.dev/devops-sandbox-2023/mind-artifact/httpd-image:latest', '-f', 'Dockerfile']
+
+
+# Push the container image
+
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-southeast1-docker.pkg.dev/devops-sandbox-2023/mind-artifact/httpd-image:latest']
+
+# deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=deployment.yaml
+  - --location=asia-southeast1
+  - --cluster=autopilot-cluster-1-mind
+  - --project=devops-sandbox-2023
